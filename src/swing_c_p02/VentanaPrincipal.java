@@ -6,11 +6,14 @@
  */
 package swing_c_p02;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,7 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 /**
- * Descripcion de la clase VentanaPrincipal
+ * Descripcion de la clase VentanaPrincipal:
+ * En esta clase añadiremos la barra de menu y los botones 
  * 
  * @author Samuel Romero Aguilera
  */
@@ -32,8 +36,9 @@ public class VentanaPrincipal extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 	public static final Color COLOR_HEADER = new Color(26, 58, 92);
-	public static final Color COLOR_ACENTO = new Color(200, 160, 0);
-	public static final Color COLOR_FONDO  = new Color(245, 245, 240);
+	public static final Color COLOR_LETRA = new Color(200, 160, 0);
+	public static final Color COLOR_ROJO_BOTON= new Color(150, 50, 33);
+	public static final Color COLOR_FONDO  = new Color(222, 211, 202);
 	
 	JMenuBar barraSuperior;
 	JMenu menuArchivo, menuRegistro, menuAyuda;
@@ -46,6 +51,7 @@ public class VentanaPrincipal extends JFrame{
 		super("Gestión Hotel Sol Y Luna");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setIconImage(new ImageIcon(getClass().getResource("/recursos/icono.png")).getImage());
+		this.getContentPane().add(new PanelCabecera(), BorderLayout.NORTH);
 		iniciarComponentes();
 		this.pack();
 		this.setMinimumSize(getSize());
@@ -137,7 +143,8 @@ public class VentanaPrincipal extends JFrame{
 	}
 	
 	private void abrirDialogoAlta() {
-		JOptionPane.showMessageDialog(this, "Aquí irá el diálogo de alta");
+		AltaReservas dialogoAlta = new AltaReservas(this, true);
+		dialogoAlta.setVisible(true);
 	}
 	
 	private void bajaNoImplementada() {
@@ -145,7 +152,7 @@ public class VentanaPrincipal extends JFrame{
 	}
 	
 	private void dialogoAcercaDe() {
-		JOptionPane.showMessageDialog(this, 
+		JOptionPane.showMessageDialog(this,
 				"Hecho por: Samuel Romero Aguilera\n"
 				+ "Proyecto: Gestion de Reservas de hotel\n"
 				+ "Curso: 2ºDAM\n"
@@ -157,6 +164,15 @@ public class VentanaPrincipal extends JFrame{
 		botonAltaReservas = new JButton("Alta Reservas");
 		botonBajaReservas = new JButton("Baja Reservas");
 		
+		botonAltaReservas.setForeground(Color.WHITE);
+		botonBajaReservas.setForeground(Color.WHITE);
+		botonAltaReservas.setBackground(COLOR_HEADER);
+		botonBajaReservas.setBackground(COLOR_ROJO_BOTON);
+		botonAltaReservas.setPreferredSize(new Dimension(200, 60));
+		botonBajaReservas.setPreferredSize(new Dimension(200, 60));
+		botonAltaReservas.setBorderPainted(false);
+		botonBajaReservas.setBorderPainted(false);
+		
 		botonAltaReservas.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/recursos/nuevo.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
 		botonAltaReservas.setIconTextGap(8);
 		botonBajaReservas.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/recursos/eliminar.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
@@ -164,6 +180,8 @@ public class VentanaPrincipal extends JFrame{
 		
 		botonAltaReservas.setMnemonic(KeyEvent.VK_N);
 		botonBajaReservas.setMnemonic(KeyEvent.VK_D);
+		botonAltaReservas.setToolTipText("Abrir el formulario de alta de reservas (Ctrl+N)");
+		botonBajaReservas.setToolTipText("Abrir el formulario de alta de reservas (Ctrl+D)");
 		
 		botonAltaReservas.addActionListener(e -> abrirDialogoAlta());
 		botonBajaReservas.addActionListener(e -> bajaNoImplementada());
