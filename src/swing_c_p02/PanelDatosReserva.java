@@ -10,12 +10,15 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -25,6 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Panel con los datos de la reserva.
@@ -36,8 +41,10 @@ public class PanelDatosReserva extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	JComboBox<String> comboTipoHabitacion;
-	JSpinner spinnerEntrada, spinnerSalida, spinnerHabitaciones;
-	JTextField fieldNoches;
+	JCheckBox checkNinos;
+	JPanel panelExtraNinosJPanel;
+	JSpinner spinnerEntrada, spinnerSalida, spinnerHabitaciones, spinnerEdad;
+	JTextField fieldNoches, fieldExtraNinos;
 	GridBagConstraints gridBagConstraints;
 
 	public PanelDatosReserva() {
@@ -55,10 +62,10 @@ public class PanelDatosReserva extends JPanel {
 
 		comboTipoHabitacion = new JComboBox<>(new String[] { "Simple", "Doble", "Suite" });
 
-		spinnerEntrada = new JSpinner(new SpinnerDateModel(hoy, hoy, null, Calendar.DAY_OF_MONTH));
+		spinnerEntrada = new JSpinner(new SpinnerDateModel(hoy, null, null, Calendar.DAY_OF_MONTH));
 		spinnerEntrada.setEditor(new JSpinner.DateEditor(spinnerEntrada, "dd/MM/yyyy"));
 
-		spinnerSalida = new JSpinner(new SpinnerDateModel(manana, manana, null, Calendar.DAY_OF_MONTH));
+		spinnerSalida = new JSpinner(new SpinnerDateModel(manana, null, null, Calendar.DAY_OF_MONTH));
 		spinnerSalida.setEditor(new JSpinner.DateEditor(spinnerSalida, "dd/MM/yyyy"));
 
 		fieldNoches = new JTextField("1", 5);
@@ -72,6 +79,11 @@ public class PanelDatosReserva extends JPanel {
 		fieldNoches.setToolTipText("Se calcula automáticamente con las fechas");
 		spinnerHabitaciones.setToolTipText("Número de habitaciones, de 1 a 50 (Alt+R)");
 
+		checkNinos = new JCheckBox("¿Niños?");
+		checkNinos.setMnemonic(KeyEvent.VK_O);
+		checkNinos.setBackground(VentanaPrincipal.COLOR_FONDO);
+		checkNinos.setToolTipText("Marcar si hay niños en la reserva (Alt+O)");
+		
 		gridBagConstraints = new GridBagConstraints();
 		gridBagConstraints.insets = new Insets(5, 8, 5, 8);
 		gridBagConstraints.anchor = GridBagConstraints.WEST;
@@ -81,6 +93,11 @@ public class PanelDatosReserva extends JPanel {
 		anadirFila("Fecha de salida:", 'S', spinnerSalida, 2);
 		anadirFila("Nº de noches:", ' ', fieldNoches, 3);
 		anadirFila("Nº de habitaciones:", 'R', spinnerHabitaciones, 4);
+		
+		GestorFechas gestorFechas = new GestorFechas();
+		spinnerEntrada.addChangeListener(gestorFechas);
+		spinnerSalida.addChangeListener(gestorFechas);
+		
 	}
 
 
@@ -101,5 +118,28 @@ public class PanelDatosReserva extends JPanel {
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 		this.add(componente, gridBagConstraints);
+	}
+	
+	private LocalDate obtenerFecha(JSpinner spinner) {
+		Date fecha = (Date) spinner.getValue();
+		return fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+	
+	private void calcularNoches() {
+		LocalDate entrada = obtenerFecha(spinnerEntrada);
+		LocalDate salida = obtenerFecha(spinnerSalida);
+
+		if (entrada.isBefore(LocalDate.now()) || !salida.isAfter(entrada)) {
+			fieldNoches.setText("");
+		} else {
+			fieldNoches.setText(String.valueOf(ChronoUnit.DAYS.between(entrada, salida)));
+		}
+	}
+	
+	private class GestorFechas implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			calcularNoches();
+		}
 	}
 }

@@ -7,8 +7,11 @@
 package swing_c_p02;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 
 /**
  * Descripcion de la clase DialogoAlta
@@ -25,9 +28,16 @@ public class AltaReservas extends JDialog {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.getContentPane().setBackground(VentanaPrincipal.COLOR_FONDO);
 		this.getContentPane().add(new PanelCabecera(), BorderLayout.NORTH);
-		this.getContentPane().add(new PanelDatosCliente(), BorderLayout.WEST);
-		this.getContentPane().add(new PanelDatosReserva(), BorderLayout.EAST);
-		this.setSize(600, 400);
+		
+		JPanel panelCentro = new JPanel(new GridLayout(1, 2, 10, 0));
+		panelCentro.setOpaque(false);
+		panelCentro.add(new PanelDatosCliente());
+		panelCentro.add(new PanelDatosReserva());
+		this.getContentPane().add(panelCentro, BorderLayout.CENTER);
+
+		this.setTitle("Alta Reservas");
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		this.setLocation(0, 0);
 		this.setLocationRelativeTo(ventanaPrincipal);
 	}
 }
