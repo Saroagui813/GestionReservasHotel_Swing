@@ -180,8 +180,8 @@ public class VentanaPrincipal extends JFrame{
 		
 		botonAltaReservas.setMnemonic(KeyEvent.VK_N);
 		botonBajaReservas.setMnemonic(KeyEvent.VK_D);
-		botonAltaReservas.setToolTipText("Abrir el formulario de alta de reservas (Ctrl+N)");
-		botonBajaReservas.setToolTipText("Abrir el formulario de alta de reservas (Ctrl+D)");
+		botonAltaReservas.setToolTipText("Abrir el formulario de alta de reservas (Alt+N)");
+		botonBajaReservas.setToolTipText("Abrir el formulario de alta de reservas (Alt+D)");
 		
 		botonAltaReservas.addActionListener(e -> abrirDialogoAlta());
 		botonBajaReservas.addActionListener(e -> bajaNoImplementada());

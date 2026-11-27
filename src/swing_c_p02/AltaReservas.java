@@ -25,7 +25,8 @@ public class AltaReservas extends JDialog {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.getContentPane().setBackground(VentanaPrincipal.COLOR_FONDO);
 		this.getContentPane().add(new PanelCabecera(), BorderLayout.NORTH);
-		this.getContentPane().add(new PanelDatosCliente(), BorderLayout.CENTER);
+		this.getContentPane().add(new PanelDatosCliente(), BorderLayout.WEST);
+		this.getContentPane().add(new PanelDatosReserva(), BorderLayout.EAST);
 		this.setSize(600, 400);
 		this.setLocationRelativeTo(ventanaPrincipal);
 	}
